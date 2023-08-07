@@ -1,0 +1,42 @@
+version: '3.1'
+services:
+  db:
+    image: mysql:latest
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: qwe123
+      MYSQL_DATABASE: test
+      MYSQL_USER: bebe
+      MYSQL_PASSWORD: qwe123
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"  # 将MySQL容器的3306端口映射到主机的3306端口
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PMA_HOST: db
+      MYSQL_ROOT_PASSWORD: qwe123
+  
+  redis:
+    image: redis:latest
+    restart: always
+    ports:
+      - "6379:6379"  # 将 Redis 容器的 6379 端口映射到主机的 6379 端口
+
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    restart: always
+    ports:
+      - "8081:8081"  # 将 Redis Commander 容器的 8081 端口映射到主机的 8081 端口
+    environment:
+      REDIS_HOSTS: redis
+      REDIS_PORT: 6379
+
+volumes:
+  db_data:
+    driver: local
